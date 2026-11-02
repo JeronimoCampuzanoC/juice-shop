@@ -1,0 +1,39 @@
+name: SAST - Semgrep
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  semgrep:
+    name: Escaneo SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar Semgrep
+        run: pip install semgrep
+
+      - name: Escaneo SAST (gate sobre login.ts)
+        run: |
+          semgrep scan \
+            --config p/javascript --config p/typescript \
+            --metrics=off \
+            --include "routes/login.ts" \
+            --sarif --output semgrep.sarif \
+            --error .
+
+      - name: Guardar evidencia
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-resultados
+          path: semgrep.sarif
