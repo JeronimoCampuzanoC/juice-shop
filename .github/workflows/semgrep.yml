@@ -2,9 +2,12 @@ name: SAST - Semgrep
 
 on:
   push:
-    branches: [master]
   pull_request:
-    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   semgrep:
@@ -13,15 +16,12 @@ jobs:
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
-
       - name: Instalar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Instalar Semgrep
         run: pip install semgrep
-
       - name: Escaneo SAST (gate sobre login.ts)
         run: |
           semgrep scan \
@@ -31,7 +31,6 @@ jobs:
             --dataflow-traces \
             --sarif-output=semgrep.sarif \
             --error .
-
       - name: Guardar evidencia
         if: always()
         uses: actions/upload-artifact@v4
