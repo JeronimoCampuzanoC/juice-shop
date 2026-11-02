@@ -28,6 +28,7 @@ jobs:
             --config p/javascript --config p/typescript \
             --metrics=off \
             --include "routes/login.ts" \
+            --dataflow-traces \
             --sarif --output semgrep.sarif \
             --error .
 
