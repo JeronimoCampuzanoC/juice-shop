@@ -1,0 +1,5 @@
+# Copy to terraform.tfvars and edit. Do not commit terraform.tfvars.
+allowed_cidrs = [
+  "203.0.113.10/32", # your public IP (curl https://checkip.amazonaws.com)
+  "203.0.113.11/32", # optional: a teammate's public IP
+]
