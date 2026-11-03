@@ -2,7 +2,9 @@ name: SAST - Semgrep
 
 on:
   push:
+    branches: ['sast-**']
   pull_request:
+    branches: ['sast-**']
   workflow_dispatch:
 
 concurrency:
